@@ -62,7 +62,7 @@
     <script>
         require(['axios', 'Magento_Customer/js/customer-data'], (axios, customerData) => {
             const spiffButton = document.querySelector('#spiff-button')
-            const sku = '<?= $_product->getSku() ?>'
+            const sku = `<?= $_product->getSku() ?>`
             spiffButton.addEventListener('click', function() {
                 const product = new window.Spiff.IntegrationProduct('<?= $_product->getSpiffIntegrationProductId() ?>');
                 product.on('ready', () => {
@@ -123,7 +123,7 @@
                                 await axios.post(`/rest/V1/guest-carts/${cartId}/custom-items`, payload)
                                 await axios.post(`/rest/V1/guest-carts/${cartId}/update-custom-items`, payload)
                             }
-                            window.location.href = '/checkout/cart'
+                             window.location.href = '/checkout/cart'
                         } catch(e) {
                             console.log(e)
                         }
