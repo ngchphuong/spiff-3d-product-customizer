@@ -13,7 +13,7 @@
            <?= /* @escapeNotVerified */ $block->getColumnHtml($_item, $columnName) ?>
         </td>
     <?php endforeach; ?>
-    <td>
+    <td class="product-image">
         <?php $product =  $_item->getProduct();?>
         <?php $objectManager = \Magento\Framework\App\ObjectManager::getInstance();?>
  
@@ -25,7 +25,7 @@
         <img src="<?php echo $image_url;?>" />
     </td>
     <?php if ($_item->getSpiffTransactionId()): ?>
-                    <tr>
+                    <tr class="spiff-id">
                         <td colspan="5"><?= __('Spiff Transaction Id') . ": " . $_item->getSpiffTransactionId() ?></td>
                     </tr>
     <?php endif; ?>

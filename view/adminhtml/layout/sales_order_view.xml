@@ -5,7 +5,7 @@
         <referenceBlock name="order_items">
          <arguments>
              <argument name="columns" xsi:type="array">
-      	          <item name="custom_item_column" xsi:type="string" translate="true">Product Image</item>
+      	          <item name="custom_item_column" xsi:type="string" translate="true">Thumbnail</item>
              </argument>
          </arguments>
          <referenceBlock name="default_order_items_renderer">
