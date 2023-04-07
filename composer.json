@@ -1,0 +1,30 @@
+{
+    "name": "spiff/personalize",
+    "description": "Product customizers are software applications for Magento that allow customization",
+    "keywords": ["magento", "magento2 extension", "magento 2 extension", "extension", "module", "magento2 module", "magento 2 module"],
+    "type": "magento2-module",
+    "version": "1.0.0",
+    "homepage": "https://github.com/ngchphuong/spiff-3d-product-customizer",
+    "authors": [
+        {
+            "name": "Phuong Nguyen",
+            "email": "ngchphuong@gmail.com"
+        }
+    ],
+    "license": [
+        "OSL-3.0",
+        "AFL-3.0"
+    ],
+    "require": {
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Spiff\\Personalize\\": ""
+        }
+    },
+    "minimum-stability": "alpha",
+    "prefer-stable": true
+}
