@@ -24,7 +24,7 @@ interface CartCustomItemRepositoryInterface
      * @throws \Magento\Framework\Exception\InputException The specified item or cart is not valid.
      */
     public function save(
-        \Magento\Quote\Api\Data\CartItemInterface $cartItem, 
+        \Magento\Quote\Api\Data\CartItemInterface $cartItem,
         \Spiff\Personalize\Api\Data\CustomItemInformationInterface $customItemInformation,
         bool $useSellPoint = false
     );
@@ -41,7 +41,7 @@ interface CartCustomItemRepositoryInterface
      * @throws \Magento\Framework\Exception\InputException The specified item or cart is not valid.
      */
     public function updateCustomItems(
-        \Magento\Quote\Api\Data\CartItemInterface $cartItem, 
+        \Magento\Quote\Api\Data\CartItemInterface $cartItem,
         \Spiff\Personalize\Api\Data\CustomItemInformationInterface $customItemInformation,
         bool $useSellPoint = false
     );

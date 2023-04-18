@@ -1,11 +1,12 @@
 <?php
 namespace Spiff\Personalize\Model\Data;
+
 use Magento\Framework\Model\AbstractModel;
 
 /**
  * @api
  */
-class CustomerSessionOutputData extends AbstractModel  implements \Spiff\Personalize\Api\Data\CustomerSessionOutputDataInterface
+class CustomerSessionOutputData extends AbstractModel implements \Spiff\Personalize\Api\Data\CustomerSessionOutputDataInterface
 {
 
     /**
@@ -58,5 +59,4 @@ class CustomerSessionOutputData extends AbstractModel  implements \Spiff\Persona
     {
         return $this->setData('session_id', $sessionId);
     }
-
 }

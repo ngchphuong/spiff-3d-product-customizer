@@ -120,10 +120,10 @@ class CustomerRepository implements CustomerRepositoryInterface
         $return = $this->customerSessionOutputDataInterfaceFactory->create();
         $token = null;
         $maskedId = null;
-        if(!$this->session->isLoggedIn() && $customerId) {
+        if (!$this->session->isLoggedIn() && $customerId) {
             $token = $this->login($customerId);
         }
-        if($this->session->isLoggedIn()) {
+        if ($this->session->isLoggedIn()) {
             $customerId = $this->session->getCustomerId();
             $token = $this->tokenModelFactory->create()->createCustomerToken($customerId)->getToken();
         }
@@ -155,7 +155,7 @@ class CustomerRepository implements CustomerRepositoryInterface
         $token = null;
         $customer = $this->customer->load($customerId);
         $this->session->setCustomerAsLoggedIn($customer);
-        if($this->session->isLoggedIn()) {
+        if ($this->session->isLoggedIn()) {
             $token = $this->tokenModelFactory->create()->createCustomerToken($customerId)->getToken();
         }
         return $token;

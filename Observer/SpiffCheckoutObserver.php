@@ -67,8 +67,8 @@ class SpiffCheckoutObserver implements ObserverInterface
             }
 
             $logger->info('Observer run2');
-            $spiffOrderItems = array();
-            $lineItems = array();
+            $spiffOrderItems = [];
+            $lineItems = [];
     
             foreach ($quoteItems as $item) {
                 if ($item->getSpiffTransactionId() !== null) {
@@ -78,7 +78,7 @@ class SpiffCheckoutObserver implements ObserverInterface
                     $orderItem->setSpiffTransactionId($item->getSpiffTransactionId());
                     $orderItem->save();
 
-                    $spiffOrderItem = array();
+                    $spiffOrderItem = [];
                     $spiffOrderItem['amountToOrder'] = $item->getQty();
                     $spiffOrderItem['transactionId'] = $item->getSpiffTransactionId();
                     $lineItems[] = [
@@ -135,20 +135,21 @@ class SpiffCheckoutObserver implements ObserverInterface
                     'note'              => $order->getCustomerNote()
                 ];
                 $logger->info('externalData: ', json_encode($externalData));
-                $body = array(
+                $body = [
                     'externalId'    => $order->getIncrementId(),
                     'autoPrint'     => false,
                     'orderItems'    => $spiffOrderItems,
                     'externalData'  => $externalData
-                );
+                ];
                 $this->sendRequestToSpiff($body);
             }
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $logger->info("error: " . $e->getMessage());
         }
     }
 
-    function spiff_hex_to_base64($hex) {
+    function spiff_hex_to_base64($hex)
+    {
         $return = "";
         foreach (str_split($hex, 2) as $pair) {
             $return .= chr(hexdec($pair));
@@ -156,20 +157,22 @@ class SpiffCheckoutObserver implements ObserverInterface
         return base64_encode($return);
     }
     
-    function spiff_auth_header($access_key, $secret_key, $method, $body, $content_type, $date_string, $path) {
-		$writer = new \Zend_Log_Writer_Stream(BP . '/var/log/custom.log');
+    function spiff_auth_header($access_key, $secret_key, $method, $body, $content_type, $date_string, $path)
+    {
+        $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/custom.log');
         $logger = new \Zend_Log();
         $logger->addWriter($writer);
 
         $md5 = md5($body, false);
         $string_to_sign = $method . "\n" . $md5 . "\n" . $content_type . "\n" . $date_string . "\n" . $path;
         $signature = $this->spiff_hex_to_base64(hash_hmac("sha1", $string_to_sign, $secret_key));
-		$logger->info('signature: ' . $signature);
+        $logger->info('signature: ' . $signature);
 
         return 'SOA '  . $access_key . ':' . $signature;
     }
     
-    function spiff_request_headers($access_key, $secret_key, $body, $path) {
+    function spiff_request_headers($access_key, $secret_key, $body, $path)
+    {
         $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/custom.log');
         $logger = new \Zend_Log();
         $logger->addWriter($writer);
@@ -182,11 +185,11 @@ class SpiffCheckoutObserver implements ObserverInterface
         $logger->info('content_type: ' . $content_type);
         $logger->info('date: ' . $date_string);
         $logger->info('path: ' . $path);
-        return array(
+        return [
             'Authorization' => $this->spiff_auth_header($access_key, $secret_key, 'POST', $body, $content_type, $date_string, $path),
             'Content-Type' => $content_type,
             'Date' => $date_string,
-        );
+        ];
     }
 
     function sendRequestToSpiff($body)
@@ -195,23 +198,23 @@ class SpiffCheckoutObserver implements ObserverInterface
         $logger = new \Zend_Log();
         $logger->addWriter($writer);
         try {
-            $access_key = $this->spiffHelperData->getGeneralConfig(SELF::SPIFF_ACCESS_KEY_PATH);
-            $secret_key = $this->spiffHelperData->getGeneralConfig(SELF::SPIFF_SECRET_PATH);
+            $access_key = $this->spiffHelperData->getGeneralConfig(self::SPIFF_ACCESS_KEY_PATH);
+            $secret_key = $this->spiffHelperData->getGeneralConfig(self::SPIFF_SECRET_PATH);
             $logger->info("access_key: " . $access_key);
             $logger->info("secret_key: " . $secret_key);
             $logger->info("body: " . json_encode($body));
-            $headers = $this->spiff_request_headers($access_key, $secret_key, json_encode($body), SELF::SPIFF_API_ORDERS_PATH);
+            $headers = $this->spiff_request_headers($access_key, $secret_key, json_encode($body), self::SPIFF_API_ORDERS_PATH);
             $logger->info("headers: " . json_encode($headers));
             
             $this->curl->setHeaders($headers);
             $this->curl->setOption(CURLOPT_RETURNTRANSFER, true);
-            $this->curl->post(SELF::SPIFF_API_BASE . SELF::SPIFF_API_ORDERS_PATH, json_encode($body));
+            $this->curl->post(self::SPIFF_API_BASE . self::SPIFF_API_ORDERS_PATH, json_encode($body));
     
             $result = $this->curl->getBody();
             $header = $this->curl->getHeaders();
     
             $logger->info("response: " . json_encode($result));
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $logger->info("error: " . $e->getMessage());
         }
     }

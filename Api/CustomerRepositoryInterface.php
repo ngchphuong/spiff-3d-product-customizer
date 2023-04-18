@@ -21,5 +21,4 @@ interface CustomerRepositoryInterface
      * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function syncSession($customerId = null);
-
 }

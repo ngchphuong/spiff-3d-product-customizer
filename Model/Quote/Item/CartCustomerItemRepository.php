@@ -75,11 +75,10 @@ class CartCustomerItemRepository implements CartCustomItemRepositoryInterface
      * @inheritdoc
      */
     public function save(
-        \Magento\Quote\Api\Data\CartItemInterface $cartItem, 
+        \Magento\Quote\Api\Data\CartItemInterface $cartItem,
         \Spiff\Personalize\Api\Data\CustomItemInformationInterface $customItemInformation,
         bool $useSellPoint = false
-    )
-    {
+    ) {
         /** @var \Magento\Quote\Model\Quote $quote */
         $cartId = $cartItem->getQuoteId();
         if (!$cartId) {
@@ -104,11 +103,10 @@ class CartCustomerItemRepository implements CartCustomItemRepositoryInterface
      * @inheritdoc
      */
     public function updateCustomItems(
-        \Magento\Quote\Api\Data\CartItemInterface $cartItem, 
+        \Magento\Quote\Api\Data\CartItemInterface $cartItem,
         \Spiff\Personalize\Api\Data\CustomItemInformationInterface $customItemInformation,
         bool $useSellPoint = false
-    )
-    {
+    ) {
         /** @var \Magento\Quote\Model\Quote $quote */
         $cartId = $cartItem->getQuoteId();
         if (!$cartId) {
@@ -122,7 +120,7 @@ class CartCustomerItemRepository implements CartCustomItemRepositoryInterface
         foreach ($items as $item) {
             if ($item->getSku() === $cartItem->getSku()) {
                 $product = $this->productRepository->get($item->getSku());
-				
+                
                 if ($useSellPoint) {
                     $mpSellProduct  = $product->getData('mp_reward_sell_product');
                     $price = 0;
@@ -131,7 +129,7 @@ class CartCustomerItemRepository implements CartCustomItemRepositoryInterface
                     $item->setBaseOriginalPrice($price);
                     $item->setMpRewardSellPoints($mpSellProduct);
                     $item->getProduct()->setIsSuperMode(true);
-                } else if ($product->getUseSpiffPrice()) {
+                } elseif ($product->getUseSpiffPrice()) {
                     $item->setCustomPrice($customItemInformation->getCustomPrice());
                     $item->setOriginalCustomPrice($customItemInformation->getCustomPrice());
                     $item->getProduct()->setIsSuperMode(true);

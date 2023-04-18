@@ -83,11 +83,10 @@ class GuestCartCustomerItemRepository implements GuestCartCustomItemRepositoryIn
      * @inheritdoc
      */
     public function save(
-        \Magento\Quote\Api\Data\CartItemInterface $cartItem, 
+        \Magento\Quote\Api\Data\CartItemInterface $cartItem,
         \Spiff\Personalize\Api\Data\CustomItemInformationInterface $customItemInformation,
         bool $useSellPoint = false
-    )
-    {
+    ) {
         /** @var \Magento\Quote\Model\Quote $quote */
         $cartId = $cartItem->getQuoteId();
         if (!$cartId) {
@@ -113,11 +112,10 @@ class GuestCartCustomerItemRepository implements GuestCartCustomItemRepositoryIn
      * @inheritdoc
      */
     public function updateCustomItems(
-        \Magento\Quote\Api\Data\CartItemInterface $cartItem, 
+        \Magento\Quote\Api\Data\CartItemInterface $cartItem,
         \Spiff\Personalize\Api\Data\CustomItemInformationInterface $customItemInformation,
         bool $useSellPoint = false
-    )
-    {
+    ) {
         /** @var \Magento\Quote\Model\Quote $quote */
         $cartId = $cartItem->getQuoteId();
         if (!$cartId) {
@@ -126,9 +124,9 @@ class GuestCartCustomerItemRepository implements GuestCartCustomItemRepositoryIn
             );
         }
 
-	$writer = new \Zend_Log_Writer_Stream(BP . '/var/log/quote.log');
-	$logger = new \Zend_Log();
-	$logger->addWriter($writer);
+        $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/quote.log');
+        $logger = new \Zend_Log();
+        $logger->addWriter($writer);
 
 
         $quoteIdMask = $this->_quoteIdMaskFactory->create()->load($cartItem->getQuoteId(), 'masked_id');
@@ -137,18 +135,18 @@ class GuestCartCustomerItemRepository implements GuestCartCustomItemRepositoryIn
         foreach ($items as $item) {
             if ($item->getSku() === $cartItem->getSku()) {
                 $product = $this->productRepository->get($item->getSku());
-				
+                
                 if ($useSellPoint) {
                     $mpSellProduct  = $product->getData('mp_reward_sell_product');
                     $price = 0;
-					$logger->info('useSellPoint: ', $price);
+                    $logger->info('useSellPoint: ', $price);
                     $item->setCustomPrice($price);
                     $item->setOriginalCustomPrice($price);
                     $item->setBaseOriginalPrice($price);
                     $item->setMpRewardSellPoints($mpSellProduct);
                     $item->getProduct()->setIsSuperMode(true);
-                } else if ($product->getUseSpiffPrice()) {
-					$logger->info('getUseSpiffPrice: ', $customItemInformation->getCustomPrice());
+                } elseif ($product->getUseSpiffPrice()) {
+                    $logger->info('getUseSpiffPrice: ', $customItemInformation->getCustomPrice());
                     $item->setCustomPrice($customItemInformation->getCustomPrice());
                     $item->setOriginalCustomPrice($customItemInformation->getCustomPrice());
                     $item->getProduct()->setIsSuperMode(true);

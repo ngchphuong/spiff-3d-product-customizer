@@ -12,51 +12,61 @@ class Data extends AbstractHelper
 {
     const XML_PATH_SPIFF = 'spiff_personalize/';
 
-	/**
-	 * @var TokenFactory
-	 */
-	protected $tokenFactory;
+    /**
+     * @var TokenFactory
+     */
+    protected $tokenFactory;
 
-	/**
-	 * @var CustomerSession
-	 */
-	protected $customerSession;
+    /**
+     * @var CustomerSession
+     */
+    protected $customerSession;
 
-	/**
-	 * @var StoreManagerInterface
-	 */
-	protected $storeManager;
+    /**
+     * @var StoreManagerInterface
+     */
+    protected $storeManager;
 
-	/**
+    /**
+     *
      * @var ScopeConfigInterface
      */
     protected $scopeConfig;
 
-	public function __construct(
-		TokenFactory $tokenFactory, 
-		CustomerSession $customerSession, 
-		StoreManagerInterface $storeManager,
-		ScopeConfigInterface $scopeConfig
-	) {
-		$this->tokenFactory = $tokenFactory;
-		$this->customerSession = $customerSession;
-		$this->storeManager = $storeManager;
-		$this->scopeConfig = $scopeConfig;
-	}
+    /**
+     * Constructor
+     *
+     * @param TokenFactory $tokenFactory
+     * @param CustomerSession $customerSession
+     */
 
-	public function getConfigValue($field, $storeId = null)
-	{
-		return $this->scopeConfig->getValue(
-			$field, ScopeInterface::SCOPE_STORE, $storeId
-		);
-	}
+    public function __construct(
+        TokenFactory $tokenFactory,
+        CustomerSession $customerSession,
+        StoreManagerInterface $storeManager,
+        ScopeConfigInterface $scopeConfig
+    ) {
+        $this->tokenFactory = $tokenFactory;
+        $this->customerSession = $customerSession;
+        $this->storeManager = $storeManager;
+        $this->scopeConfig = $scopeConfig;
+    }
 
-	public function getGeneralConfig($code, $storeId = null)
-	{
-		return $this->getConfigValue(self::XML_PATH_SPIFF .'general/'. $code, $storeId);
-	}
+    public function getConfigValue($field, $storeId = null)
+    {
+        return $this->scopeConfig->getValue(
+            $field,
+            ScopeInterface::SCOPE_STORE,
+            $storeId
+        );
+    }
 
-	/**
+    public function getGeneralConfig($code, $storeId = null)
+    {
+        return $this->getConfigValue(self::XML_PATH_SPIFF .'general/'. $code, $storeId);
+    }
+
+    /**
      * Get current store currency code
      *
      * @return string
@@ -66,9 +76,9 @@ class Data extends AbstractHelper
         return $this->storeManager->getStore()->getCurrentCurrencyCode();
     }
 
-	/**
+    /**
      * Get customer token
-     * 
+     *
      * @return string
      */
     public function getCustomerToken()

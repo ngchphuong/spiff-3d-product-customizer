@@ -7,7 +7,7 @@ use Magento\Eav\Setup\EavSetupFactory;
 use Magento\Catalog\Model\Product;
 use Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface;
 
-class UpgradeData implements Setup\UpgradeDataInterface 
+class UpgradeData implements Setup\UpgradeDataInterface
 {
     /**
      * Eav setup factory

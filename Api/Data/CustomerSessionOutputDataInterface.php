@@ -38,5 +38,4 @@ interface CustomerSessionOutputDataInterface
      * @return $this
      */
     public function setSessionId($sessionId);
-
 }
