@@ -76,7 +76,6 @@
                     const transaction = new window.Spiff.Transaction(transactionOptions);
                     transaction.on('complete', async (result) => {
                         // request to get quote id
-                        console.log({ result })
                         try {
                             const { data: syncData } = await axios.post('/rest/V1/customer-sync')
 
@@ -127,6 +126,9 @@
                         } catch(e) {
                             console.log(e)
                         }
+                    });
+                    transaction.on('quit', () => {
+                        // Todo: Will update if we need to do something when closing spiff modal
                     });
                     transaction.execute();
                 });
