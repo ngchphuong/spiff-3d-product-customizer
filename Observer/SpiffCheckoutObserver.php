@@ -162,9 +162,8 @@ class SpiffCheckoutObserver implements ObserverInterface
         $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/custom.log');
         $logger = new \Zend_Log();
         $logger->addWriter($writer);
-
-        $md5 = md5($body, false);
-        $string_to_sign = $method . "\n" . $md5 . "\n" . $content_type . "\n" . $date_string . "\n" . $path;
+		$hashed = hash("sha512", $body);
+        $string_to_sign = $method . "\n" . $hashed . "\n" . $content_type . "\n" . $date_string . "\n" . $path;
         $signature = $this->spiff_hex_to_base64(hash_hmac("sha1", $string_to_sign, $secret_key));
         $logger->info('signature: ' . $signature);
 

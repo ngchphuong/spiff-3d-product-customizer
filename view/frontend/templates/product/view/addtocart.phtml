@@ -9,8 +9,8 @@
 <?php $_product = $block->getProduct(); ?>
 <?php $buttonTitle = __('Add to Cart'); ?>
 <?php if ($_product->isSaleable()):?>
-    <?php $helper = $block->helper('Spiff\Personalize\Helper\Data'); ?>
-    <?php $currencyCode = $helper->getCurrentCurrencyCode(); ?>
+<?php $helper = $this->helper('Spiff\Personalize\Helper\Data'); ?>
+<?php $currencyCode = $helper->getCurrentCurrencyCode(); ?>
 <div class="box-tocart">
     <div class="fieldset">
         <?php if ($block->shouldRenderQuantity()):?>
