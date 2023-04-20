@@ -4,9 +4,6 @@
   "type": "magento2-module",
   "version": "1.0.0",
   "license": [ "OSL-3.0", "AFL-3.0" ],
-  "require": { 
-    "php": "~8.2.0",
-    "magento/framework": "~100.0.4" }, 
   "authors": [ { 
       "name": "Liam Parker",
       "email": "developer@spiff.com.au", 
