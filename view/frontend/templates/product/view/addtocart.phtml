@@ -66,15 +66,15 @@
             spiffButton.addEventListener('click', function() {
                 const product = new window.Spiff.IntegrationProduct('<?= $_product->getSpiffIntegrationProductId() ?>');
                 product.on('ready', () => {
-                    const pageSessionId = window.Spiff.Analytics.createPageSession();
-                    const transactionOptions = {
+                   
+                    const hostedExperienceOptions = {
                         presentmentCurrency: '<?= $currencyCode ?>',
                         product: product,
-                        shouldCreateDesignProduct: true,
-                        pageSessionId
                     };
-                    const transaction = new window.Spiff.Transaction(transactionOptions);
-                    transaction.on('complete', async (result) => {
+
+                    const hostedExperience = new window.Spiff.HostedExperience(hostedExperienceOptions);
+                    hostedExperience.on("complete", async (result) => {
+                        // Handle the result of the workflow experience..
                         // request to get quote id
                         try {
                             const { data: syncData } = await axios.post('/rest/V1/customer-sync')
@@ -127,10 +127,7 @@
                             console.log(e)
                         }
                     });
-                    transaction.on('quit', () => {
-                        // Todo: Will update if we need to do something when closing spiff modal
-                    });
-                    transaction.execute();
+                    hostedExperience.execute();
                 });
                 product.confirmActive();
             });
