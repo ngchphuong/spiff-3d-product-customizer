@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
+ * Copyright ï¿½ Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
 
@@ -13,7 +13,7 @@ $_item = $block->getItem();
 
 $product = $_item->getProduct();
 
-$data= $block->spiff_show_preview_image_in_cart($product,$_item);
+$data= $block->spiff_return_data_in_cart($product,$_item);
 $metadata = $data['metadata'];
 $isVisibleProduct = $product->isVisibleInSiteVisibility();
 /** @var \Magento\Msrp\Helper\Data $helper */
@@ -22,11 +22,11 @@ $canApplyMsrp = $helper->isShowBeforeOrderConfirm($product) && $helper->isMinima
 ?>
 <tbody class="cart item">
     <tr class="item-info">
-    <?php if($data['image']!==null):?>
+    <?php if($data['spiff_image']!==null):?>
         <td data-th="<?= $block->escapeHtml(__('Item')) ?>" class="col item" style="display: flex;">
-                <div class="ImagePreview" style="display: inline-block; padding-right: 30px;">
-                    <a href="<?= $block->escapeUrl($block->getProductUrl()) ?>">
-                        <img src="<?= $data['image']?>" alt="" style="width: 117px;"> 
+                <div class="ImagePreview" style="display: inline-block; padding-right: 20px;">
+                    <a href="<?= $block->escapeUrl($block->getProductUrl()) ?>" title="<?php echo $data['name'] ?>">
+                        <img src="<?= $data['spiff_image']?>" alt="<?php echo $data['name'] ?>" style="width: 239px;height: 165px;" loading="lazy"> 
                     </a>
                 </div>  
             <?php else:?>

@@ -4,11 +4,11 @@
  * See COPYING.txt for license details.
  */
 
-/** @var $block \Magento\Catalog\Block\Product\View */
+/** @var $block \Spiff\Personalize\Block\Product\View */
 ?>
 <?php $_product = $block->getProduct();
-      $productColection = $this->helper('Spiff\Personalize\Helper\ProductHelper'); 
-      $product = $productColection->getProductCollection();
+      $spiffProduct = $this->helper('Spiff\Personalize\Helper\ProductHelper'); 
+      $product = $spiffProduct->getSpiffProductRegistry();
  ?>
 <?php $buttonTitle = __('Add to Cart');
      if($product!=null){

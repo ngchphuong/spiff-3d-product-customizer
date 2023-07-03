@@ -42,7 +42,6 @@ class View extends \Magento\Catalog\Block\Product\View
     }
     public function getOptionData($_product)
     {
-       
           $product = $this->Product->load($_product->getId());
           $customOptions = $this->Option->getProductOptionCollection($product);
           $optionsArray = $customOptions->getItems();

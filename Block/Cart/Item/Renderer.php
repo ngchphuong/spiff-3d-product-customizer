@@ -640,7 +640,7 @@ use Magento\Framework\HTTP\Client\Curl;
     }
 
 
-    public function spiff_get_transaction_image($transaction_id) {
+    public function spiff_get_data_transaction_api($transaction_id) {
         $data = [];
         $this->curl->get(self::SPIFF_API_BASE.self::SPIFF_API_TRANSACTIONS_PATH.'/'.$transaction_id);
         $responseCode = $this->curl->getStatus();
@@ -658,21 +658,22 @@ use Magento\Framework\HTTP\Client\Curl;
         $response = $this->curl->getBody();
        
         $dataDesgn = json_decode($response, true);
-        $data['image'] = $dataDesgn['links'][0]['href'];
+        $data['spiff_image'] = $dataDesgn['links'][0]['href'];
         $data['metadata'] =$dataDesgn['data']['metadata'];
         return $data;
     }
     
-    public function spiff_show_preview_image_in_cart($product_image, $cart_item) {
+    public function spiff_return_data_in_cart($product, $cart_item) {
         if (!array_key_exists('spiff_transaction_id', $cart_item->getData())) {
-          return $product_image;
+          return $product;
         }
-         $product = $this->productRepository->get($cart_item->getSku());
-        if($cart_item->getSpiffTransactionId()!==null && $product->getRedirectProduct()===null ){
-            $preview_image = $this->spiff_get_transaction_image($cart_item->getSpiffTransactionId());
-            return $preview_image;
+        $baseProduct = $this->productRepository->get($cart_item->getSku());
+        if($cart_item->getSpiffTransactionId()!==null && $baseProduct->getRedirectProduct()===null ){
+            $data = $this->spiff_get_data_transaction_api($cart_item->getSpiffTransactionId());
+            $data['name'] = $cart_item->getName();
+            return $data;
         }else{
-            return $product_image;
+            return $product;
         }
     }
     public function CheckMetaData($data){   
