@@ -8,6 +8,7 @@ use Magento\Checkout\Model\Cart;
 use Magento\Catalog\Model\Product;
 use Magento\Framework\Registry;
 use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
+use Magento\Catalog\Api\ProductRepositoryInterface;
 class SpiffAddGiftCartObserver implements ObserverInterface
 {
     /**
@@ -15,7 +16,7 @@ class SpiffAddGiftCartObserver implements ObserverInterface
      */
     private $productRepository;
     private $registry;
-    private $CollectionFactory;
+    // private $CollectionFactory;
     /**
      * @var Cart
      */
@@ -28,12 +29,13 @@ class SpiffAddGiftCartObserver implements ObserverInterface
      */
     public function __construct(
         // ProductRepositoryInterface $productRepository,
-        CollectionFactory $CollectionFactory,
+        // CollectionFactory $CollectionFactory,
         Cart $cart,
         Registry $registry,
-   
+        ProductRepositoryInterface $productRepository
     ) {
-        $this->CollectionFactory = $CollectionFactory;
+        // $this->CollectionFactory = $CollectionFactory;
+        $this->productRepository = $productRepository;
         $this->cart = $cart;
         $this->registry = $registry;
       
@@ -52,16 +54,20 @@ class SpiffAddGiftCartObserver implements ObserverInterface
         $logger->addWriter($writer);
         $product = $observer->getEvent()->getProduct();
         $RedirectProduct = $product->getRedirectProduct();
-        $collection =$this->CollectionFactory->create()
-        ->addAttributeToSelect('*')
-        ->load();
-        try { 
-            foreach ($collection as $product){
-               if($product->getSku() == $RedirectProduct){
-                    $this->registry->register('spiff_product', $product); // get Product save in Registry
-                    break;
-                }
-           }  
+        // $collection =$this->CollectionFactory->create()
+        // ->addAttributeToSelect('*')
+        // ->load();
+        try {
+            if($RedirectProduct){
+                $spiffProduct = $this->productRepository->get($RedirectProduct);
+                $this->registry->register('spiff_product', $spiffProduct);
+            }
+        //     foreach ($collection as $product){
+        //        if($product->getSku() == $RedirectProduct){
+        //             $this->registry->register('spiff_product', $product); // get Product save in Registry
+        //             break;
+        //         }
+        //    }  
            
         } catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
              
