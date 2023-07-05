@@ -5,7 +5,7 @@ use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Registry;
 use Magento\Catalog\Api\ProductRepositoryInterface;
-class SpiffGetGreetingCardObserver implements ObserverInterface
+class SpiffGetRedirectProductObserver implements ObserverInterface
 {
     /**
      * @var ProductRepository
