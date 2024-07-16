@@ -50,13 +50,18 @@ class SpiffCheckoutObserver implements ObserverInterface
 
     public function execute(Observer $observer)
     {
+		
         $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/custom.log');
         $logger = new \Zend_Log();
         $logger->addWriter($writer);
         try {
             $order = $observer->getEvent()->getOrder();
             $quote = $observer->getEvent()->getQuote();
-    
+			
+			if (empty($order) || empty($quote)){
+				return;
+			}
+
             $quoteItems = $quote->getItems();
             $orderItems = $order->getItems();
             $items = [];

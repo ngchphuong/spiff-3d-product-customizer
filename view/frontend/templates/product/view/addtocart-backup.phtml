@@ -9,10 +9,6 @@
 <?php $_product = $block->getProduct();
       $spiffProduct = $this->helper('Spiff\Personalize\Helper\ProductHelper'); 
       $product = $spiffProduct->getSpiffProductRegistry();
-
-      $spiffHelper = $this->helper('Spiff\Personalize\Helper\Data'); 
-      $application_key = $spiffHelper->getGeneralConfig('application_key');
-      
  ?>
 <?php $buttonTitle = __('Add to Cart');
      if($product!=null){
@@ -117,7 +113,6 @@
                         const hostedExperienceOptions = {
                             presentmentCurrency: '<?= $currencyCode ?>',
                             product: product,
-                            applicationKey: '<?= $application_key ?>'
                         };
                 
                         const hostedExperience = new window.Spiff.HostedExperience(hostedExperienceOptions);
@@ -251,7 +246,7 @@
                 });
             })
         </script>
-      <?php elseif($_product->getEnableSpiff()=='1'):?>
+      <?php else:?>
         <script type="text/javascript" async src="https://assets.spiff.com.au/api.js"></script>
         <script>
         require(['axios', 'Magento_Customer/js/customer-data'], (axios, customerData) => {
@@ -269,7 +264,6 @@
                     const hostedExperienceOptions = {
                         presentmentCurrency: '<?= $currencyCode ?>',
                         product: product,
-                        applicationKey: '<?= $application_key ?>'
                     };
 
                     const hostedExperience = new window.Spiff.HostedExperience(hostedExperienceOptions);
