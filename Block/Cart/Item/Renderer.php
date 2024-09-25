@@ -35,7 +35,8 @@ use Magento\Framework\HTTP\Client\Curl;
      * @var \Magento\Checkout\Model\Session
      */
     protected $_checkoutSession;
-    const SPIFF_API_BASE = 'https://api.spiff.com.au';
+    const SPIFF_API_AU = 'https://api.au.spiffcommerce.com';
+    const SPIFF_API_US = 'https://api.us.spiffcommerce.com';
     const SPIFF_API_TRANSACTIONS_PATH = '/api/transactions';
    
     /**
@@ -125,6 +126,7 @@ use Magento\Framework\HTTP\Client\Curl;
         \Magento\Catalog\Block\Product\ImageBuilder $imageBuilder,
         \Magento\Framework\Url\Helper\Data $urlHelper,
         \Magento\Framework\Message\ManagerInterface $messageManager,
+        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         PriceCurrencyInterface $priceCurrency,
         \Magento\Framework\Module\Manager $moduleManager,
         InterpretationStrategyInterface $messageInterpretationStrategy,
@@ -142,6 +144,7 @@ use Magento\Framework\HTTP\Client\Curl;
         $this->_productConfig = $productConfig;
         $this->_checkoutSession = $checkoutSession;
         $this->messageManager = $messageManager;
+        $this->scopeConfig = $scopeConfig;
         parent::__construct($context, $data);
         $this->_isScopePrivate = true;
         $this->moduleManager = $moduleManager;
@@ -302,6 +305,16 @@ use Magento\Framework\HTTP\Client\Curl;
     public function getOptionList()
     {
         return $this->getProductOptions();
+    }
+
+	public function getSelectedOptionsOfQuoteItem(\Magento\Catalog\Model\Product\Configuration\Item\ItemInterface $item)
+    {
+		$writer = new \Zend_Log_Writer_Stream(BP . '/var/log/getCustomOptions.log');
+		$logger = new \Zend_Log();
+		$logger->addWriter($writer);
+		$logger->info("getSelectedOptionsOfQuoteItem");
+		$logger->info(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS,15));
+        return $this->_productConfig->getCustomOptions($item);
     }
 
     /**
@@ -642,7 +655,24 @@ use Magento\Framework\HTTP\Client\Curl;
 
     public function spiff_get_data_transaction_api($transaction_id) {
         $data = [];
-        $this->curl->get(self::SPIFF_API_BASE.self::SPIFF_API_TRANSACTIONS_PATH.'/'.$transaction_id);
+        $api_region = $this->scopeConfig->getValue( 
+            'spiff_personalize/general/region', 
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE, 
+         );
+        $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/region.log');
+		$logger = new \Zend_Log();
+		$logger->addWriter($writer);
+		$logger->info($api_region);
+        switch ($api_region) {
+            case 'US':
+                $this->curl->get(self::SPIFF_API_US.self::SPIFF_API_TRANSACTIONS_PATH.'/'.$transaction_id);
+                break;
+            default:
+                $this->curl->get(self::SPIFF_API_AU.self::SPIFF_API_TRANSACTIONS_PATH.'/'.$transaction_id);
+                break;
+        }
+
+        
         $responseCode = $this->curl->getStatus();
         $responseData = $this->curl->getBody();
         if($responseCode ===200){
@@ -653,7 +683,16 @@ use Magento\Framework\HTTP\Client\Curl;
             }
         }  
         $this->curl->setOption(CURLOPT_FOLLOWLOCATION, false);
-        $this->curl->get(self::SPIFF_API_BASE.$href);
+
+        switch ($api_region) {
+            case 'US':
+                $this->curl->get(self::SPIFF_API_US.$href);
+                break;
+            default:
+                $this->curl->get(self::SPIFF_API_AU.$href);
+                break;
+        }
+        
       
         $response = $this->curl->getBody();
        
@@ -663,14 +702,17 @@ use Magento\Framework\HTTP\Client\Curl;
         return $data;
     }
     
-    public function spiff_return_data_in_cart($product, $cart_item) {
+    public function spiff_return_data_in_cart($product, $cart_item) {	
+		
+		if ($product->getTypeId() == 'bundle' ) {
+			return $product;
+		}
         if (!array_key_exists('spiff_transaction_id', $cart_item->getData())) {
           return $product;
         }
         $baseProduct = $this->productRepository->get($cart_item->getSku());
         if($cart_item->getSpiffTransactionId()!==null && $baseProduct->getRedirectProduct()===null ){
             $data = $this->spiff_get_data_transaction_api($cart_item->getSpiffTransactionId());
-            $data['name'] = $cart_item->getName();
             return $data;
         }else{
             return $product;
